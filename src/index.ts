@@ -36,7 +36,8 @@ console.log("http://" + FINAL_DOMAIN + ".local\n");
 
 console.log("Configuration:");
 console.log(`  Lock Mode: ${LOCK_MODE}`);
-console.log(`  Lock Duration: ${secretTTL}s\n`);
+if (LOCK_MODE == LockModes.COOKIE)
+  console.log(`  Lock Duration: ${secretTTL}s\n`);
 
 new Elysia()
   .onRequest((data) => {
