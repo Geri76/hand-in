@@ -7,21 +7,20 @@ import already_uploaded from "./already_uploaded.html" with { type: "file" };
 import { file, randomUUIDv7 } from "bun";
 import figlet from "figlet";
 import "colors"
+import { LockModes } from "./types.js";
+import { Config } from "./config_helper.js";
 
 const DOMAIN = "handin";
 
+const CONFIG = new Config("config.json");
+
 const PROD = true;
 
-enum LockModes {
-  COOKIE,
-  IP
-};
-
-const LOCK_MODE = LockModes.IP as LockModes;
+const LOCK_MODE = CONFIG.lockMode;
 
 const secrets: string[] = [];
 
-const secretTTL = 5 * 60; // 5 Minutes
+const secretTTL = CONFIG.lockDuration;
 
 try {
   mkdirSync("uploads");
@@ -34,6 +33,10 @@ console.log("\x1b[5m" + figlet.textSync(FINAL_DOMAIN + ".local", {
 }).green + "\x1b[25m");
 
 console.log("http://" + FINAL_DOMAIN + ".local\n");
+
+console.log("Configuration:");
+console.log(`  Lock Mode: ${LOCK_MODE}`);
+console.log(`  Lock Duration: ${secretTTL}s\n`);
 
 new Elysia()
   .onRequest((data) => {

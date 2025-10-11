@@ -44,3 +44,4 @@ package-lock.json
 .vscode/
 uploads/
 handin.exe
+config.json
