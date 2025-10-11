@@ -1,12 +1,18 @@
 {
   "name": "hand-in",
   "version": "1.0.50",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "b": "bun build src/index.ts --minify --sourcemap --compile --outfile handin --windows-icon=icon.ico"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysiajs/html": "^1.4.0",
+    "colors": "^1.4.0",
+    "elysia": "latest",
+    "figlet": "^1.9.3",
+    "mdns-server": "^1.0.11"
   },
   "devDependencies": {
     "bun-types": "latest"
