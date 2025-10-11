@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
+      * {
+        font-family: "Outfit", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      body {
+        margin: 0;
+        width: 100dvw;
+        height: 100dvh;
+        display: flex;
+        gap: 2rem;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #001514;
+        color: #e34a6f;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      #title {
+        font-size: 2rem;
+      }
+
+      #file {
+        color: #411620;
+        background-color: #e34a6f;
+        font-size: 1.5rem;
+        padding: 1rem 2rem;
+        display: inline-block;
+        cursor: pointer;
+        transition: 100ms;
+        box-shadow: 0 1rem 0 #722839;
+        transform: translateY(-0.5rem);
+      }
+
+      #file:hover {
+        box-shadow: 0 0.5rem 0 #722839;
+        transform: translateY(0rem);
+      }
+
+      #file:active {
+        box-shadow: 0 0 0 #722839;
+        transform: translateY(0.5rem);
+      }
+    </style>
+    <title>Hand In</title>
+  </head>
+  <body>
+    <span id="title">Töltsd fel a munkádat!</span>
+    <form action="/upload" method="post" id="form" enctype="multipart/form-data">
+      <label for="file-upload" id="file">Fájl Kiválasztása</label>
+      <input id="file-upload" name="file" type="file" />
+    </form>
+    <script>
+      document.getElementById("file-upload").addEventListener("change", (e) => {
+        document.getElementById("form").submit();
+      });
+    </script>
+  </body>
+</html>
