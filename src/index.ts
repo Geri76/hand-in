@@ -8,12 +8,13 @@ import "colors";
 import { LockModes } from "./types.js";
 import { Config } from "./config_helper.js";
 import { already_uploaded, page } from "./page_helper.js";
+import { COLORS } from "./contants.js";
 
 const DOMAIN = "handin";
 
 const CONFIG = new Config("config.json");
 
-const PROD = true;
+const PROD = Bun.env.NODE_ENV === "development" ? false : true;
 
 const LOCK_MODE = CONFIG.lockMode;
 
@@ -28,18 +29,21 @@ try {
 const FINAL_DOMAIN = await PublishService(DOMAIN);
 
 console.log(
-  "\x1b[5m" +
+  COLORS.YELLOW +
+    "\x1b[6m" +
     figlet.textSync(FINAL_DOMAIN + ".local", {
       font: "Standard",
-    }).green +
-    "\x1b[25m"
+    }) +
+    "\x1b[25m" +
+    COLORS.RESET
 );
 
-console.log("http://" + FINAL_DOMAIN + ".local\n");
+console.log(COLORS.GREEN + "http://" + COLORS.RED + FINAL_DOMAIN + ".local\n" + COLORS.RESET);
 
-console.log("Configuration:");
-console.log(`  Lock Mode: ${LOCK_MODE}`);
-if (LOCK_MODE == LockModes.COOKIE) console.log(`  Lock Duration: ${SECRET_TTL}s\n`);
+console.log(COLORS.BLUE + "Beállítások:" + COLORS.RESET);
+console.log(`${COLORS.YELLOW}  Zárolási mód: ${COLORS.RED + LOCK_MODE}${COLORS.RESET}`);
+if (LOCK_MODE == LockModes.COOKIE)
+  console.log(`${COLORS.YELLOW}  Zárolási időtartam: ${COLORS.RED + SECRET_TTL}s\n${COLORS.RESET}`);
 
 new Elysia()
   .onRequest((data) => {
@@ -96,7 +100,11 @@ new Elysia()
         SECRETS.push(server?.requestIP(request)?.address.toString() ?? "");
       }
 
-      console.log(`Received file: ${f.name} (${f.size} bytes) from ${server?.requestIP(request)?.address.toString()}`);
+      console.log(
+        `${COLORS.YELLOW}\nFájl feltöltve: ${COLORS.RED}${f.name} (${COLORS.GREEN}${f.size} bájt${COLORS.RED}) ${
+          COLORS.BLUE + server?.requestIP(request)?.address.toString() + COLORS.RESET
+        }`
+      );
 
       return redirect("/");
     },
