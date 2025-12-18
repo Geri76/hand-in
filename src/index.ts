@@ -17,9 +17,9 @@ const PROD = true;
 
 const LOCK_MODE = CONFIG.lockMode;
 
-const secrets: string[] = [];
+const SECRETS: string[] = [];
 
-const secretTTL = CONFIG.lockDuration;
+const SECRET_TTL = CONFIG.lockDuration;
 
 try {
   mkdirSync("uploads");
@@ -39,7 +39,7 @@ console.log("http://" + FINAL_DOMAIN + ".local\n");
 
 console.log("Configuration:");
 console.log(`  Lock Mode: ${LOCK_MODE}`);
-if (LOCK_MODE == LockModes.COOKIE) console.log(`  Lock Duration: ${secretTTL}s\n`);
+if (LOCK_MODE == LockModes.COOKIE) console.log(`  Lock Duration: ${SECRET_TTL}s\n`);
 
 new Elysia()
   .onRequest((data) => {
@@ -52,10 +52,10 @@ new Elysia()
     async ({ server, cookie, request }) => {
       switch (LOCK_MODE) {
         case LockModes.COOKIE:
-          if (secrets.includes(cookie.secret.value ?? "")) return file(already_uploaded.toString());
+          if (SECRETS.includes(cookie.secret.value ?? "")) return file(already_uploaded.toString());
           break;
         case LockModes.IP:
-          if (secrets.includes(server?.requestIP(request)?.address.toString() ?? ""))
+          if (SECRETS.includes(server?.requestIP(request)?.address.toString() ?? ""))
             return file(already_uploaded.toString());
           break;
         default:
@@ -79,10 +79,10 @@ new Elysia()
 
       switch (LOCK_MODE) {
         case LockModes.COOKIE:
-          if (secrets.includes(cookie.secret.value ?? "")) return redirect("/");
+          if (SECRETS.includes(cookie.secret.value ?? "")) return redirect("/");
           break;
         case LockModes.IP:
-          if (secrets.includes(server?.requestIP(request)?.address.toString() ?? "")) return redirect("/");
+          if (SECRETS.includes(server?.requestIP(request)?.address.toString() ?? "")) return redirect("/");
           break;
         default:
           break;
@@ -90,10 +90,10 @@ new Elysia()
 
       if (LOCK_MODE == LockModes.COOKIE) {
         const uuid = randomUUIDv7("base64", Date.now());
-        cookie.secret.set({ value: uuid, expires: new Date(Date.now() + secretTTL * 1000) });
-        secrets.push(uuid);
+        cookie.secret.set({ value: uuid, expires: new Date(Date.now() + SECRET_TTL * 1000) });
+        SECRETS.push(uuid);
       } else {
-        secrets.push(server?.requestIP(request)?.address.toString() ?? "");
+        SECRETS.push(server?.requestIP(request)?.address.toString() ?? "");
       }
 
       console.log(`Received file: ${f.name} (${f.size} bytes) from ${server?.requestIP(request)?.address.toString()}`);
