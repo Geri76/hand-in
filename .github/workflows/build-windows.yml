@@ -57,14 +57,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag = "${{ github.sha }}"
-          $title = "hand-in $tag"
+          $fullSha = "${{ github.sha }}"
+          $shortSha = $fullSha.Substring(0, 7)
+          $tag = "commit-$shortSha"
+          $title = "hand-in $shortSha"
 
-          Write-Host "Checking for existing release tag: $tag"
+          Write-Host "Checking for existing release tag: $tag (target $fullSha)"
           gh release view $tag --repo "${{ github.repository }}" *> $null
           if ($LASTEXITCODE -ne 0) {
             Write-Host "Release not found; creating release $tag"
-            gh release create $tag "${{ github.workspace }}\handin.exe" --repo "${{ github.repository }}" --title "$title" --notes "Automated build for commit $tag"
+            gh release create $tag --repo "${{ github.repository }}" --target "$fullSha" --title "$title" --notes "Automated build for commit $fullSha" \
+              "${{ github.workspace }}\handin.exe"
           } else {
-            Write-Host "Release already exists; leaving it as-is"
+            Write-Host "Release already exists; uploading/overwriting handin.exe"
+            gh release upload $tag "${{ github.workspace }}\handin.exe" --repo "${{ github.repository }}" --clobber
           }
