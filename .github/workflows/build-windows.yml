@@ -5,6 +5,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-windows:
     name: Build handin.exe on Windows
@@ -47,3 +50,21 @@ jobs:
           name: handin-windows
           path: handin.exe
           if-no-files-found: error
+
+      - name: Create release (if missing) and upload handin.exe
+        if: github.event_name == 'push'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "${{ github.sha }}"
+          $title = "hand-in $tag"
+
+          Write-Host "Checking for existing release tag: $tag"
+          gh release view $tag --repo "${{ github.repository }}" *> $null
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "Release not found; creating release $tag"
+            gh release create $tag "${{ github.workspace }}\handin.exe" --repo "${{ github.repository }}" --title "$title" --notes "Automated build for commit $tag"
+          } else {
+            Write-Host "Release already exists; leaving it as-is"
+          }
