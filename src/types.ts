@@ -1,4 +1,4 @@
 export enum LockModes {
-  COOKIE = "cookie",
-  IP = "ip",
+  COOKIE = "COOKIE",
+  IP = "IP",
 }
