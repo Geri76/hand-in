@@ -30,7 +30,7 @@ const FINAL_DOMAIN = await PublishService(DOMAIN);
 console.log(
   "\x1b[5m" +
     figlet.textSync(FINAL_DOMAIN + ".local", {
-      font: "Colossal",
+      font: "Standard",
     }).green +
     "\x1b[25m"
 );
@@ -43,7 +43,8 @@ if (LOCK_MODE == LockModes.COOKIE) console.log(`  Lock Duration: ${secretTTL}s\n
 
 new Elysia()
   .onRequest((data) => {
-    if (PROD && data.request.headers.get("host") != FINAL_DOMAIN + ".local") return redirect("http://" + FINAL_DOMAIN + ".local");
+    if (PROD && data.request.headers.get("host") != FINAL_DOMAIN + ".local")
+      return redirect("http://" + FINAL_DOMAIN + ".local");
   })
   .use(html())
   .get(
@@ -54,7 +55,8 @@ new Elysia()
           if (secrets.includes(cookie.secret.value ?? "")) return file(already_uploaded.toString());
           break;
         case LockModes.IP:
-          if (secrets.includes(server?.requestIP(request)?.address.toString() ?? "")) return file(already_uploaded.toString());
+          if (secrets.includes(server?.requestIP(request)?.address.toString() ?? ""))
+            return file(already_uploaded.toString());
           break;
         default:
           break;
