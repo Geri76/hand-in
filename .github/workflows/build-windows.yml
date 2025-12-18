@@ -1,0 +1,49 @@
+name: Build (Windows)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Build handin.exe on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build executable
+        run: bun run b
+
+      - name: Ensure handin.exe exists in repo root
+        shell: pwsh
+        run: |
+          if (Test-Path "${{ github.workspace }}\handin.exe") {
+            Write-Host "handin.exe exists"
+            exit 0
+          }
+
+          if (Test-Path "${{ github.workspace }}\handin") {
+            Rename-Item -Path "${{ github.workspace }}\handin" -NewName "handin.exe" -Force
+            Write-Host "Renamed handin -> handin.exe"
+            exit 0
+          }
+
+          Write-Error "Expected build output handin.exe (or handin) in repo root, but none found."
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: handin-windows
+          path: handin.exe
+          if-no-files-found: error
