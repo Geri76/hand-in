@@ -61,14 +61,14 @@ jobs:
           $shortSha = $fullSha.Substring(0, 7)
           $tag = "commit-$shortSha"
           $title = "hand-in $shortSha"
+          $exePath = Join-Path "${{ github.workspace }}" "handin.exe"
 
           Write-Host "Checking for existing release tag: $tag (target $fullSha)"
           gh release view $tag --repo "${{ github.repository }}" *> $null
           if ($LASTEXITCODE -ne 0) {
             Write-Host "Release not found; creating release $tag"
-            gh release create $tag --repo "${{ github.repository }}" --target "$fullSha" --title "$title" --notes "Automated build for commit $fullSha" \
-              "${{ github.workspace }}\handin.exe"
+            gh release create $tag $exePath --repo "${{ github.repository }}" --target "$fullSha" --title "$title" --notes "Automated build for commit $fullSha"
           } else {
             Write-Host "Release already exists; uploading/overwriting handin.exe"
-            gh release upload $tag "${{ github.workspace }}\handin.exe" --repo "${{ github.repository }}" --clobber
+            gh release upload $tag $exePath --repo "${{ github.repository }}" --clobber
           }
