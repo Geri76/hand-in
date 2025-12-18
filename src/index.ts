@@ -3,7 +3,6 @@ import { PublishService } from "./dns_helper.js";
 import { mkdirSync } from "node:fs";
 import { html } from "@elysiajs/html";
 import { file, randomUUIDv7 } from "bun";
-import figlet from "figlet";
 import "colors";
 import { LockModes } from "./types.js";
 import { Config } from "./config_helper.js";
@@ -27,16 +26,6 @@ try {
 } catch {}
 
 const FINAL_DOMAIN = await PublishService(DOMAIN);
-
-console.log(
-  COLORS.YELLOW +
-    "\x1b[6m" +
-    figlet.textSync(FINAL_DOMAIN + ".local", {
-      font: "Standard",
-    }) +
-    "\x1b[25m" +
-    COLORS.RESET
-);
 
 console.log(COLORS.GREEN + "http://" + COLORS.RED + FINAL_DOMAIN + ".local\n" + COLORS.RESET);
 
