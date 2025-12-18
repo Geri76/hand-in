@@ -1,5 +1,10 @@
 # Hand-In
 
+[![Bun](https://img.shields.io/badge/Bun-000000?style=flat&logo=bun&logoColor=white)](https://bun.sh)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![GitHub stars](https://img.shields.io/github/stars/Geri76/hand-in?style=flat)](https://github.com/Geri76/hand-in/stargazers)
+[![Last commit](https://img.shields.io/github/last-commit/Geri76/hand-in?style=flat)](https://github.com/Geri76/hand-in/commits)
+
 A project for managing and organizing submissions.
 
 ## Description
