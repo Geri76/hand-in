@@ -108,7 +108,7 @@ new Elysia()
       }),
     }
   )
-  .get("/stats", ({ params }) => {
+  .get("/stats", () => {
     return { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION };
   })
   .get("/health", () => "OK")
@@ -117,5 +117,4 @@ new Elysia()
     const randomIndex = Math.floor(Math.random() * options.length);
     return file(options[randomIndex]);
   })
-
   .listen(80);
