@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/static/icon" type="image/webp" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
@@ -28,6 +29,10 @@
 
       input[type="file"] {
         display: none;
+      }
+
+      a {
+        display: block;
       }
 
       #title {
@@ -70,6 +75,25 @@
         background-color: #002a27;
       }
 
+      #header {
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        top: 0;
+        box-sizing: border-box;
+        padding: 1rem;
+        width: 100%;
+        height: fit-content;
+        font-size: 0.75rem;
+        color: #e34a6f;
+        background-color: #002a27;
+      }
+
+      #header img {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
       #versions {
         display: flex;
         gap: 1rem;
@@ -86,6 +110,11 @@
     <title>Hand In</title>
   </head>
   <body>
+    <div id="header">
+      <a href="https://github.com/geri76/hand-in" target="_blank" rel="noopener noreferrer">
+        <img src="/static/github" alt="GitHub Icon" />
+      </a>
+    </div>
     <span id="title">Töltsd fel a munkádat!</span>
     <form action="/upload" method="post" id="form" enctype="multipart/form-data">
       <label for="file-upload" id="file">Fájl Kiválasztása</label>
@@ -93,7 +122,7 @@
     </form>
     <div id="footer">
       <div id="versions">
-        <span id="handin-version">Hand-In: </span>
+        <span id="handin-version">Hand In: </span>
         <span id="bun-version">Bun: </span>
         <span id="elysia-version">Elysia: </span>
       </div>
@@ -127,6 +156,8 @@
           document.getElementById("handin-version").textContent += data.HANDIN_VERSION;
           document.getElementById("elysia-version").textContent += data.ELYSIA_VERSION;
           document.getElementById("bun-version").textContent += data.BUN_VERSION;
+
+          console.log(data);
         });
     </script>
   </body>

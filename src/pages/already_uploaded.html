@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/static/icon" type="image/webp" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
@@ -26,13 +27,18 @@
         color: #e34a6f;
       }
 
-      img {
+      #already-uploaded-img {
         width: 15rem;
+      }
+
+      a {
+        display: block;
       }
 
       #title {
         font-size: 2rem;
         font-weight: 700;
+        text-align: center;
       }
 
       #footer {
@@ -47,6 +53,31 @@
         font-size: 0.75rem;
         color: #e34a6f;
         background-color: #002a27;
+      }
+
+      #header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        box-sizing: border-box;
+        padding: 1rem;
+        width: 100%;
+        height: fit-content;
+        font-size: 0.75rem;
+        color: #e34a6f;
+        background-color: #002a27;
+      }
+
+      #header img {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      #file-name {
+        font-size: 1rem;
+        font-style: italic;
       }
 
       #versions {
@@ -65,11 +96,21 @@
     <title>Hand In</title>
   </head>
   <body>
-    <span id="title">Már töltöttél fel fájlt!</span>
-    <img src="/static/random" />
+    <div id="header">
+      <a href="https://github.com/geri76/hand-in" target="_blank" rel="noopener noreferrer">
+        <img src="/static/github" alt="GitHub Icon" />
+      </a>
+    </div>
+    <span id="title">
+      Már töltöttél fel fájlt!
+      <br />
+      <span id="file-name"></span>
+    </span>
+
+    <img id="already-uploaded-img" src="/static/already_uploaded" />
     <div id="footer">
       <div id="versions">
-        <span id="handin-version">Hand-In: </span>
+        <span id="handin-version">Hand In: </span>
         <span id="bun-version">Bun: </span>
         <span id="elysia-version">Elysia: </span>
       </div>
@@ -99,6 +140,8 @@
           document.getElementById("handin-version").textContent += data.HANDIN_VERSION;
           document.getElementById("elysia-version").textContent += data.ELYSIA_VERSION;
           document.getElementById("bun-version").textContent += data.BUN_VERSION;
+
+          document.getElementById("file-name").textContent = "( " + data.I_UPLOADED[0].fileName + " )";
         });
     </script>
   </body>
