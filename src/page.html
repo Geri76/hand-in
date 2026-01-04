@@ -55,6 +55,20 @@
         box-shadow: 0 0 0 #722839;
         transform: translateY(0.5rem);
       }
+
+      #footer {
+        display: flex;
+        gap: 1rem;
+        position: absolute;
+        bottom: 0;
+        box-sizing: border-box;
+        padding: 1rem;
+        width: 100%;
+        height: fit-content;
+        font-size: 0.75rem;
+        color: #e34a6f;
+        background-color: #002a27;
+      }
     </style>
     <title>Hand In</title>
   </head>
@@ -64,10 +78,23 @@
       <label for="file-upload" id="file">Fájl Kiválasztása</label>
       <input id="file-upload" name="file" type="file" />
     </form>
+    <div id="footer">
+      <span id="handin-version">Hand-In: </span>
+      <span id="bun-version">Bun: </span>
+      <span id="elysia-version">Elysia: </span>
+    </div>
     <script>
       document.getElementById("file-upload").addEventListener("change", (e) => {
         document.getElementById("form").submit();
       });
+
+      fetch("/stats")
+        .then((res) => res.json())
+        .then((data) => {
+          document.getElementById("handin-version").textContent += data.HANDIN_VERSION;
+          document.getElementById("elysia-version").textContent += data.ELYSIA_VERSION;
+          document.getElementById("bun-version").textContent += data.BUN_VERSION;
+        });
     </script>
   </body>
 </html>
