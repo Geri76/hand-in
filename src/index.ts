@@ -9,6 +9,7 @@ import { Config } from "./config_helper.js";
 import { already_uploaded, page } from "./page_helper.js";
 import { COLORS } from "./contants.js";
 import { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION } from "./version_helper.js";
+import { file_helper } from "./file_helper.js";
 
 const DOMAIN = "handin";
 
@@ -110,4 +111,14 @@ new Elysia()
   .get("/stats", ({ params }) => {
     return { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION };
   })
+  .get("/health", () => "OK")
+  .get("/static/:file_name", ({ params }) => {
+    switch (params.file_name) {
+      case "cat.webp":
+        return file(file_helper.catWebpUrl);
+      default:
+        return "N/A";
+    }
+  })
+
   .listen(80);

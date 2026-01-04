@@ -26,39 +26,18 @@
         color: #e34a6f;
       }
 
-      input[type="file"] {
-        display: none;
+      img {
+        width: 15rem;
       }
 
       #title {
         font-size: 2rem;
-      }
-
-      #file {
-        color: #411620;
-        background-color: #e34a6f;
-        font-size: 1.5rem;
-        padding: 1rem 2rem;
-        display: inline-block;
-        cursor: pointer;
-        transition: 100ms;
-        box-shadow: 0 1rem 0 #722839;
-        transform: translateY(-0.5rem);
-      }
-
-      #file:hover {
-        box-shadow: 0 0.5rem 0 #722839;
-        transform: translateY(0rem);
-      }
-
-      #file:active {
-        box-shadow: 0 0 0 #722839;
-        transform: translateY(0.5rem);
+        font-weight: 700;
       }
 
       #footer {
         display: flex;
-        gap: 1rem;
+        justify-content: space-between;
         position: absolute;
         bottom: 0;
         box-sizing: border-box;
@@ -69,24 +48,50 @@
         color: #e34a6f;
         background-color: #002a27;
       }
+
+      #versions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      #health {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background-color: #4caf50;
+        box-shadow: 0 0 1rem #4caf50;
+      }
     </style>
     <title>Hand In</title>
   </head>
   <body>
-    <span id="title">Töltsd fel a munkádat!</span>
-    <form action="/upload" method="post" id="form" enctype="multipart/form-data">
-      <label for="file-upload" id="file">Fájl Kiválasztása</label>
-      <input id="file-upload" name="file" type="file" />
-    </form>
+    <span id="title">Már töltöttél fel fájlt!</span>
+    <img src="/static/cat.webp" />
     <div id="footer">
-      <span id="handin-version">Hand-In: </span>
-      <span id="bun-version">Bun: </span>
-      <span id="elysia-version">Elysia: </span>
+      <div id="versions">
+        <span id="handin-version">Hand-In: </span>
+        <span id="bun-version">Bun: </span>
+        <span id="elysia-version">Elysia: </span>
+      </div>
+      <div id="health"></div>
     </div>
     <script>
-      document.getElementById("file-upload").addEventListener("change", (e) => {
-        document.getElementById("form").submit();
-      });
+      setInterval(() => {
+        fetch("/health")
+          .then((res) => {
+            if (res.status === 200) {
+              document.getElementById("health").style.backgroundColor = "#4caf50";
+              document.getElementById("health").style.boxShadow = "0 0 1rem #4caf50";
+            } else {
+              document.getElementById("health").style.backgroundColor = "#f44336";
+              document.getElementById("health").style.boxShadow = "0 0 1rem #f44336";
+            }
+          })
+          .catch(() => {
+            document.getElementById("health").style.backgroundColor = "#f44336";
+            document.getElementById("health").style.boxShadow = "0 0 1rem #f44336";
+          });
+      }, 5000);
 
       fetch("/stats")
         .then((res) => res.json())
