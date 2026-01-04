@@ -16,7 +16,7 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
 async function checkForUpdate(): Promise<string | undefined> {
   const currentVersion = HANDIN_VERSION;
 
-  const response = await fetch("https://raw.githubusercontent.com/Geri76/hand-in/refs/heads/main/package.json");
+  const response = await fetch("https://raw.githubusercontent.com/Geri76/hand-in/heads/main/package.json");
   const data = await response.json();
 
   const latestVersion = data.version;
