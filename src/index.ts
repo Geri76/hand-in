@@ -112,13 +112,10 @@ new Elysia()
     return { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION };
   })
   .get("/health", () => "OK")
-  .get("/static/:file_name", ({ params }) => {
-    switch (params.file_name) {
-      case "cat.webp":
-        return file(file_helper.catWebpUrl);
-      default:
-        return "N/A";
-    }
+  .get("/static/random", () => {
+    const options = file_helper;
+    const randomIndex = Math.floor(Math.random() * options.length);
+    return file(options[randomIndex]);
   })
 
   .listen(80);
