@@ -8,6 +8,7 @@ import { LockModes } from "./types.js";
 import { Config } from "./config_helper.js";
 import { already_uploaded, page } from "./page_helper.js";
 import { COLORS } from "./contants.js";
+import { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION } from "./version_helper.js";
 
 const DOMAIN = "handin";
 
@@ -106,4 +107,7 @@ new Elysia()
       }),
     }
   )
+  .get("/stats", ({ params }) => {
+    return { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION };
+  })
   .listen(80);
