@@ -10,6 +10,7 @@ import { already_uploaded, page } from "./page_helper.js";
 import { COLORS } from "./contants.js";
 import { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION } from "./version_helper.js";
 import { file_helper } from "./file_helper.js";
+import { checkForUpdate } from "./utils.js";
 
 const DOMAIN = "handin";
 
@@ -28,6 +29,13 @@ try {
 } catch {}
 
 const FINAL_DOMAIN = await PublishService(DOMAIN);
+
+const LATEST_VERSION = await checkForUpdate();
+if (LATEST_VERSION) {
+  console.log(
+    COLORS.YELLOW + `Új verzió érhető el: ${LATEST_VERSION} (jelenlegi: ${HANDIN_VERSION})` + COLORS.RESET + "\n"
+  );
+}
 
 console.log(COLORS.GREEN + "http://" + COLORS.RED + FINAL_DOMAIN + ".local\n" + COLORS.RESET);
 
