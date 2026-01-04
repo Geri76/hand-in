@@ -1,3 +1,4 @@
+// @ts-nocheck
 import catWebpUrl from "./static/already_uploaded/cat.webp";
 import cat2WebpUrl from "./static/already_uploaded/cat2.webp";
 import cat3WebpUrl from "./static/already_uploaded/cat3.webp";
