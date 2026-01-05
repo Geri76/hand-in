@@ -118,9 +118,14 @@
     </div>
     <script>
       setInterval(() => {
+        const start = Date.now();
         fetch("/health")
           .then((res) => {
             if (res.status === 200) {
+              const secSpent = Date.now() - start;
+
+              document.getElementById("health").title = secSpent + " ms";
+
               document.getElementById("health").style.backgroundColor = "#4caf50";
               document.getElementById("health").style.boxShadow = "0 0 1rem #4caf50";
             } else {

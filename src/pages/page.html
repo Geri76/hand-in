@@ -134,9 +134,14 @@
       });
 
       setInterval(() => {
+        const start = Date.now();
         fetch("/health")
           .then((res) => {
             if (res.status === 200) {
+              const secSpent = Date.now() - start;
+
+              document.getElementById("health").title = secSpent + " ms";
+
               document.getElementById("health").style.backgroundColor = "#4caf50";
               document.getElementById("health").style.boxShadow = "0 0 1rem #4caf50";
             } else {
@@ -156,8 +161,6 @@
           document.getElementById("handin-version").textContent += data.HANDIN_VERSION;
           document.getElementById("elysia-version").textContent += data.ELYSIA_VERSION;
           document.getElementById("bun-version").textContent += data.BUN_VERSION;
-
-          console.log(data);
         });
     </script>
   </body>
