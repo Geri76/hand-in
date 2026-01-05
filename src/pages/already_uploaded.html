@@ -129,11 +129,13 @@
               document.getElementById("health").style.backgroundColor = "#4caf50";
               document.getElementById("health").style.boxShadow = "0 0 1rem #4caf50";
             } else {
+              document.getElementById("health").title = "Hiba";
               document.getElementById("health").style.backgroundColor = "#f44336";
               document.getElementById("health").style.boxShadow = "0 0 1rem #f44336";
             }
           })
           .catch(() => {
+            document.getElementById("health").title = "Hiba";
             document.getElementById("health").style.backgroundColor = "#f44336";
             document.getElementById("health").style.boxShadow = "0 0 1rem #f44336";
           });
