@@ -11,7 +11,7 @@
   "dependencies": {
     "@elysiajs/html": "^1.4.0",
     "colors": "^1.4.0",
-    "elysia": "latest",
+    "elysia": "^1.4.21",
     "mdns-server": "^1.0.11"
   },
   "devDependencies": {
