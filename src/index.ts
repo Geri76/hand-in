@@ -3,7 +3,6 @@ import { PublishService } from "./dns_helper.js";
 import { mkdirSync } from "node:fs";
 import { html } from "@elysiajs/html";
 import { file, randomUUIDv7 } from "bun";
-import "colors";
 import { LockModes, Secret } from "./types.js";
 import { Config } from "./config_helper.js";
 import { already_uploaded, index, index_confirm } from "./page_helper.js";
