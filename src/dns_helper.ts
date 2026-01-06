@@ -2,6 +2,7 @@ import os from "os";
 import { execFileSync } from "child_process";
 import dgram from "dgram";
 import { HANDIN_VERSION } from "./version_helper.js";
+import { COLORS } from "./contants.js";
 
 type InterfaceKind = "physical" | "vpn" | "hypervisor" | "container" | "bridge" | "loopback" | "unknown";
 
@@ -384,6 +385,14 @@ export async function PublishService(domain: string): Promise<string> {
 
   const mainInterface = await getPrimaryInternetInterface();
 
+  if (!mainInterface || !mainInterface.address) {
+    console.log(
+      `${COLORS.RED}Sikertelen mDNS szolgáltatás közzététele, mert nem található elsődleges internetes interfész.\n${COLORS.RESET}`
+    );
+
+    process.exit(1);
+  }
+
   let finalDomain = domain + "-" + makeId(4);
 
   mdns.on("query", function (query: any) {
@@ -392,7 +401,7 @@ export async function PublishService(domain: string): Promise<string> {
         {
           name: finalDomain + ".local",
           type: "A",
-          data: mainInterface?.address,
+          data: mainInterface.address,
         },
       ]);
     }
