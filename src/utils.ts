@@ -1,8 +1,6 @@
 import { HANDIN_VERSION } from "./version_helper.js";
 
-function rgbToAnsi256({ r, g, b }: { r: number; g: number; b: number }): string {
-  return `\x1b[38;2;${r};${g};${b}m`;
-}
+const rgbToAnsi256 = ({ r, g, b }: { r: number; g: number; b: number }) => `\x1b[38;2;${r};${g};${b}m`;
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } {
   const bigint = parseInt(hex.replace("#", ""), 16);
