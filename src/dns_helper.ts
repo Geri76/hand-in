@@ -1,7 +1,6 @@
 import os from "os";
 import { execFileSync } from "child_process";
 import dgram from "dgram";
-import { HANDIN_VERSION } from "./version_helper.js";
 import { COLORS } from "./contants.js";
 
 type InterfaceKind = "physical" | "vpn" | "hypervisor" | "container" | "bridge" | "loopback" | "unknown";
