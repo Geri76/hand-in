@@ -1,6 +1,7 @@
 import os from "os";
 import { execFileSync } from "child_process";
 import dgram from "dgram";
+import { HANDIN_VERSION } from "./version_helper.js";
 
 type InterfaceKind = "physical" | "vpn" | "hypervisor" | "container" | "bridge" | "loopback" | "unknown";
 
@@ -19,7 +20,10 @@ type PrimaryInterface = {
 
 const DEST_IP = "1.1.1.1";
 
-function classifyInterface(name: string, description?: string): { kind: InterfaceKind; isVirtual: boolean; reason: string } {
+function classifyInterface(
+  name: string,
+  description?: string
+): { kind: InterfaceKind; isVirtual: boolean; reason: string } {
   const n = (name || "").toLowerCase();
   const d = (description || "").toLowerCase();
 
@@ -27,8 +31,32 @@ function classifyInterface(name: string, description?: string): { kind: Interfac
     return { kind: "loopback", isVirtual: true, reason: "loopback name/description" };
   }
 
-  const vpnNamePatterns = [/^tun\d+$/, /^tap\d+$/, /^wg\d+$/, /^tailscale\d+$/, /^zt[a-z0-9]+$/, /^utun\d+$/, /^ppp\d+$/, /^ipsec.*$/, /^anonvpn.*$/, /^grace?vpn.*$/, /^npf.*$/, /^utun$/, /^utun[0-9]+$/];
-  const vpnDescPatterns = [/wireguard/, /wintun/, /vpn/, /anyconnect/, /openvpn/, /nordlynx/, /expressvpn/, /pan\-gps/, /pulse secure/];
+  const vpnNamePatterns = [
+    /^tun\d+$/,
+    /^tap\d+$/,
+    /^wg\d+$/,
+    /^tailscale\d+$/,
+    /^zt[a-z0-9]+$/,
+    /^utun\d+$/,
+    /^ppp\d+$/,
+    /^ipsec.*$/,
+    /^anonvpn.*$/,
+    /^grace?vpn.*$/,
+    /^npf.*$/,
+    /^utun$/,
+    /^utun[0-9]+$/,
+  ];
+  const vpnDescPatterns = [
+    /wireguard/,
+    /wintun/,
+    /vpn/,
+    /anyconnect/,
+    /openvpn/,
+    /nordlynx/,
+    /expressvpn/,
+    /pan\-gps/,
+    /pulse secure/,
+  ];
   if (vpnNamePatterns.some((rx) => rx.test(n)) || vpnDescPatterns.some((rx) => rx.test(d))) {
     return { kind: "vpn", isVirtual: true, reason: "matches VPN/tunnel patterns" };
   }
@@ -360,7 +388,13 @@ export async function PublishService(domain: string): Promise<string> {
 
   mdns.on("query", function (query: any) {
     if (query.questions[0] && query.questions[0].name === finalDomain + ".local" && query.questions[0].type === "A") {
-      mdns.respond([{ name: finalDomain + ".local", type: "A", data: mainInterface?.address }]);
+      mdns.respond([
+        {
+          name: finalDomain + ".local",
+          type: "A",
+          data: mainInterface?.address,
+        },
+      ]);
     }
   });
 
