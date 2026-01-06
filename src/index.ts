@@ -6,7 +6,7 @@ import { file, randomUUIDv7 } from "bun";
 import "colors";
 import { LockModes, Secret } from "./types.js";
 import { Config } from "./config_helper.js";
-import { already_uploaded, page } from "./page_helper.js";
+import { already_uploaded, index } from "./page_helper.js";
 import { COLORS } from "./contants.js";
 import { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION } from "./version_helper.js";
 import { file_helper } from "./file_helper.js";
@@ -66,7 +66,7 @@ new Elysia()
           break;
       }
 
-      return file(page.toString());
+      return file(index.toString());
     },
     {
       cookie: t.Cookie({
@@ -108,7 +108,10 @@ new Elysia()
 
       if (LOCK_MODE == LockModes.COOKIE) {
         const uuid = randomUUIDv7("base64", Date.now());
-        cookie.secret.set({ value: uuid, expires: new Date(Date.now() + SECRET_TTL * 1000) });
+        cookie.secret.set({
+          value: uuid,
+          expires: new Date(Date.now() + SECRET_TTL * 1000),
+        });
         SECRETS.push({ value: uuid, fileName: f.name } as Secret);
       } else {
         SECRETS.push({
