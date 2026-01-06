@@ -64,7 +64,11 @@ function classifyInterface(
   const hypervisorNamePatterns = [/^vboxnet/, /^vmnet/, /^veth/, /^virbr/, /^br-/, /^hyper-v/i, /^vEthernet/i];
   const hypervisorDescPatterns = [/hyper\-v/, /vmware/, /virtualbox/, /parallels/, /virtual ethernet/];
   if (hypervisorNamePatterns.some((rx) => rx.test(n)) || hypervisorDescPatterns.some((rx) => rx.test(d))) {
-    return { kind: "hypervisor", isVirtual: true, reason: "matches hypervisor/virtual NIC patterns" };
+    return {
+      kind: "hypervisor",
+      isVirtual: true,
+      reason: "matches hypervisor/virtual NIC patterns",
+    };
   }
 
   const containerBridgePatterns = [/^docker/, /^cni/, /^flannel/, /^br-/, /^veth/];
@@ -242,7 +246,9 @@ if ($r) {
 }
 `.trim();
 
-    const out = execFileSync("powershell.exe", ["-NoProfile", "-Command", ps], { encoding: "utf8" }).trim();
+    const out = execFileSync("powershell.exe", ["-NoProfile", "-Command", ps], {
+      encoding: "utf8",
+    }).trim();
     const data = JSON.parse(out || "{}");
     if (data && data.InterfaceAlias) {
       const ifaceName: string = data.InterfaceAlias;

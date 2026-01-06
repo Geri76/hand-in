@@ -111,7 +111,10 @@ new Elysia()
         cookie.secret.set({ value: uuid, expires: new Date(Date.now() + SECRET_TTL * 1000) });
         SECRETS.push({ value: uuid, fileName: f.name } as Secret);
       } else {
-        SECRETS.push({ value: server?.requestIP(request)?.address.toString() ?? "", fileName: f.name } as Secret);
+        SECRETS.push({
+          value: server?.requestIP(request)?.address.toString() ?? "",
+          fileName: f.name,
+        } as Secret);
       }
 
       console.log(
