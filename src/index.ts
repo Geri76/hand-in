@@ -41,6 +41,10 @@ if (LATEST_VERSION) {
 console.log(COLORS.GREEN + "http://" + COLORS.RED + FINAL_DOMAIN + ".local\n" + COLORS.RESET);
 
 console.log(COLORS.BLUE + "Beállítások:" + COLORS.RESET);
+console.log(
+  COLORS.YELLOW + "  Feltöltés Jóváhagyás: " + COLORS.RED + (CONFIG.confirmSubmission ? "Igen" : "Nem") + COLORS.RESET
+);
+
 console.log(`${COLORS.YELLOW}  Zárolási mód: ${COLORS.RED + LOCK_MODE}${COLORS.RESET}`);
 if (LOCK_MODE == LockModes.COOKIE)
   console.log(`${COLORS.YELLOW}  Zárolási időtartam: ${COLORS.RED + SECRET_TTL}s\n${COLORS.RESET}`);
