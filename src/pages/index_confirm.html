@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/static/icon" type="image/webp" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
+      * {
+        font-family: "Outfit", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      body {
+        margin: 0;
+        width: 100dvw;
+        height: 100dvh;
+        display: flex;
+        gap: 2rem;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #001514;
+        color: #e34a6f;
+        touch-action: none;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      a {
+        display: block;
+      }
+
+      #title {
+        font-size: 2rem;
+      }
+
+      #file {
+        color: #411620;
+        background-color: #e34a6f;
+        font-size: 1.5rem;
+        padding: 1rem 2rem;
+        display: inline-block;
+        cursor: pointer;
+        transition: 100ms;
+        box-shadow: 0 1rem 0 #722839;
+        transform: translateY(-0.5rem);
+      }
+
+      #file:hover {
+        box-shadow: 0 0.5rem 0 #722839;
+        transform: translateY(0rem);
+      }
+
+      #file:active {
+        box-shadow: 0 0 0 #722839;
+        transform: translateY(0.5rem);
+      }
+
+      #footer {
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        bottom: 0;
+        box-sizing: border-box;
+        padding: 1rem;
+        width: 100%;
+        height: fit-content;
+        font-size: 0.75rem;
+        color: #e34a6f;
+        background-color: #002a27;
+      }
+
+      #header {
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        top: 0;
+        box-sizing: border-box;
+        padding: 1rem;
+        width: 100%;
+        height: fit-content;
+        font-size: 0.75rem;
+        color: #e34a6f;
+        background-color: #002a27;
+      }
+
+      #header img {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      #versions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      #health {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background-color: #4caf50;
+        box-shadow: 0 0 1rem #4caf50;
+      }
+
+      #form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      #confirm-container {
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        visibility: hidden;
+      }
+
+      #confirm {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 2rem;
+        background: #002a27;
+        outline: none;
+      }
+
+      #confirm::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 2rem;
+        height: 2rem;
+        background: #e34a6f;
+        cursor: pointer;
+        background-image: url("/static/arrow");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      #confirm::-moz-range-thumb {
+        width: 2rem;
+        height: 2rem;
+        background: #e34a6f;
+        cursor: pointer;
+        background-image: url("/static/arrow");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    </style>
+    <title>Hand In</title>
+  </head>
+  <body>
+    <div id="header">
+      <a href="https://github.com/geri76/hand-in" target="_blank" rel="noopener noreferrer">
+        <img src="/static/github" alt="GitHub Icon" />
+      </a>
+    </div>
+    <span id="title">Töltsd fel a munkádat!</span>
+    <form action="/upload" method="post" id="form" enctype="multipart/form-data">
+      <label for="file-upload" id="file">Fájl Kiválasztása</label>
+      <input id="file-upload" name="file" type="file" />
+
+      <span id="file-name"></span>
+
+      <div id="confirm-container">
+        <input type="range" name="confirm" id="confirm" value="0" min="0" max="100" step="1" />
+        <span>Húzd el a feltöltéshez!</span>
+      </div>
+    </form>
+    <div id="footer">
+      <div id="versions">
+        <span id="handin-version">Hand In: </span>
+        <span id="bun-version">Bun: </span>
+        <span id="elysia-version">Elysia: </span>
+      </div>
+      <div id="health"></div>
+    </div>
+    <script>
+      document.getElementById("file-upload").addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+          document.getElementById("confirm-container").style.visibility = "visible";
+
+          document.getElementById("file-name").textContent = e.target.files[0].name;
+        }
+      });
+
+      document.getElementById("confirm").addEventListener("change", (e) => {
+        const value = e.target.value;
+        if (value >= 100) {
+          document.getElementById("form").submit();
+        } else {
+          e.target.value = 0;
+        }
+      });
+
+      setInterval(() => {
+        const start = Date.now();
+        fetch("/health")
+          .then((res) => {
+            if (res.status === 200) {
+              const secSpent = Date.now() - start;
+
+              document.getElementById("health").title = secSpent + " ms";
+
+              document.getElementById("health").style.backgroundColor = "#4caf50";
+              document.getElementById("health").style.boxShadow = "0 0 1rem #4caf50";
+            } else {
+              document.getElementById("health").title = "Hiba";
+              document.getElementById("health").style.backgroundColor = "#f44336";
+              document.getElementById("health").style.boxShadow = "0 0 1rem #f44336";
+            }
+          })
+          .catch(() => {
+            document.getElementById("health").title = "Hiba";
+            document.getElementById("health").style.backgroundColor = "#f44336";
+            document.getElementById("health").style.boxShadow = "0 0 1rem #f44336";
+          });
+      }, 5000);
+
+      fetch("/stats")
+        .then((res) => res.json())
+        .then((data) => {
+          document.getElementById("handin-version").textContent += data.HANDIN_VERSION;
+          document.getElementById("elysia-version").textContent += data.ELYSIA_VERSION;
+          document.getElementById("bun-version").textContent += data.BUN_VERSION;
+        });
+    </script>
+  </body>
+</html>

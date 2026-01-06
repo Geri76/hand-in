@@ -11,8 +11,9 @@ import icon128Url from "./static/icons/icon128.webp";
 import icon64Url from "./static/icons/icon64.webp";
 
 import githubIconUrl from "./static/icons/github.svg";
+import arrowIconUrl from "./static/icons/arrow.svg";
 
 export const file_helper = {
   already_uploaded: [catWebpUrl, cat2WebpUrl, cat3WebpUrl, cat4WebpUrl],
-  icons: { icon1024Url, icon512Url, icon256Url, icon128Url, icon64Url, githubIconUrl },
+  icons: { icon1024Url, icon512Url, icon256Url, icon128Url, icon64Url, githubIconUrl, arrowIconUrl },
 };

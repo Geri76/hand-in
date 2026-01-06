@@ -6,7 +6,7 @@ import { file, randomUUIDv7 } from "bun";
 import "colors";
 import { LockModes, Secret } from "./types.js";
 import { Config } from "./config_helper.js";
-import { already_uploaded, index } from "./page_helper.js";
+import { already_uploaded, index, index_confirm } from "./page_helper.js";
 import { COLORS } from "./contants.js";
 import { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION } from "./version_helper.js";
 import { file_helper } from "./file_helper.js";
@@ -23,6 +23,8 @@ const LOCK_MODE = CONFIG.lockMode;
 const SECRETS: Secret[] = [];
 
 const SECRET_TTL = CONFIG.lockDuration;
+
+const INDEX_PAGE = CONFIG.confirmSubmission ? index_confirm : index;
 
 try {
   mkdirSync("uploads");
@@ -66,7 +68,7 @@ new Elysia()
           break;
       }
 
-      return file(index.toString());
+      return file(INDEX_PAGE.toString());
     },
     {
       cookie: t.Cookie({
@@ -167,5 +169,8 @@ new Elysia()
   })
   .get("/static/github", () => {
     return file(file_helper.icons.githubIconUrl);
+  })
+  .get("/static/arrow", () => {
+    return file(file_helper.icons.arrowIconUrl);
   })
   .listen(80);
