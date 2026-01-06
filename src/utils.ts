@@ -1,4 +1,3 @@
-import { file_helper } from "./file_helper.js";
 import { HANDIN_VERSION } from "./version_helper.js";
 
 function rgbToAnsi256({ r, g, b }: { r: number; g: number; b: number }): string {
