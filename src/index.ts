@@ -37,8 +37,9 @@ const FINAL_DOMAIN = await PublishService(DOMAIN);
 const LATEST_VERSION = await checkForUpdate();
 if (LATEST_VERSION) {
   console.log(
-    COLORS.YELLOW + `Új verzió érhető el: ${LATEST_VERSION} (jelenlegi: ${HANDIN_VERSION})` + COLORS.RESET + "\n"
+    `${COLORS.YELLOW}Új verzió érhető el: ${COLORS.BLUE}${LATEST_VERSION}${COLORS.YELLOW} (jelenlegi: ${COLORS.RED}${HANDIN_VERSION}${COLORS.YELLOW})`
   );
+  console.log(`Nyomd meg az "${COLORS.BLUE}U${COLORS.YELLOW}" billentyűt a frissítéshez.\n`);
 }
 
 console.log(COLORS.GREEN + "http://" + COLORS.RED + FINAL_DOMAIN + ".local\n" + COLORS.RESET);
