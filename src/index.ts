@@ -10,6 +10,9 @@ import { COLORS } from "./contants.js";
 import { BUN_VERSION, ELYSIA_VERSION, HANDIN_VERSION } from "./version_helper.js";
 import { file_helper } from "./file_helper.js";
 import { checkForUpdate } from "./utils.js";
+import { REPLACER_SCRIPT } from "./update_helper.js";
+import { spawn } from "child_process";
+import { spawnSync } from "node:child_process";
 
 const DOMAIN = "handin";
 
@@ -48,6 +51,87 @@ console.log(
 console.log(`${COLORS.YELLOW}  Zárolási mód: ${COLORS.RED + LOCK_MODE}${COLORS.RESET}`);
 if (LOCK_MODE == LockModes.COOKIE)
   console.log(`${COLORS.YELLOW}  Zárolási időtartam: ${COLORS.RED + SECRET_TTL}s\n${COLORS.RESET}`);
+
+// Updater
+
+let alreadyUpdating = false;
+
+process.stdin.setRawMode(true);
+process.stdin.on("data", async (e) => {
+  if (e[0] == 3) {
+    console.log(COLORS.RED + "\nKilépés..." + COLORS.RESET);
+    process.exit();
+  }
+
+  if (e[0] == 117 && !alreadyUpdating && LATEST_VERSION) {
+    alreadyUpdating = true;
+    console.log(COLORS.YELLOW + "\nFrissítés indítása..." + COLORS.RESET);
+
+    const url = `https://github.com/geri76/hand-in/releases/latest/download/handin.exe`;
+    const response = await fetch(url);
+
+    if (!response.ok || !response.body) throw new Error(`Letöltés sikertelen: HTTP ${response.status}`);
+
+    const total = Number(response.headers.get("content-length") ?? "0");
+    const reader = response.body.getReader();
+    const sink = Bun.file("handin.exe.new").writer();
+
+    let received = 0;
+    const startedAt = Date.now();
+    let lastRenderAt = 0;
+
+    const render = (final = false) => {
+      const now = Date.now();
+      if (!final && now - lastRenderAt < 100) return;
+      lastRenderAt = now;
+
+      const elapsedSec = Math.max(0.001, (now - startedAt) / 1000);
+      const bps = received / elapsedSec;
+
+      const speed =
+        bps > 1024 * 1024
+          ? `${(bps / (1024 * 1024)).toFixed(2)} MB/s`
+          : bps > 1024
+          ? `${(bps / 1024).toFixed(2)} KB/s`
+          : `${bps.toFixed(0)} B/s`;
+
+      if (total > 0) {
+        const pct = Math.min(100, (received / total) * 100);
+        process.stdout.write(`\r${COLORS.BLUE}Letöltés: ${COLORS.RED}${pct.toFixed(1)}%${COLORS.YELLOW} (${speed})`);
+      } else {
+        process.stdout.write(`\r${COLORS.BLUE}Letöltés: ${COLORS.RED}${received}${COLORS.YELLOW} bájt (${speed})`);
+      }
+    };
+
+    render();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) {
+        received += value.byteLength;
+        sink.write(value);
+        render();
+      }
+    }
+
+    await sink.end();
+    render(true);
+    process.stdout.write("\n");
+
+    console.log(COLORS.GREEN + "\nSikeres frissítés." + COLORS.RESET);
+
+    const child = spawn("cmd", ["/c", "pwsh", "-c", REPLACER_SCRIPT], {
+      detached: true,
+    });
+
+    child.unref();
+
+    process.exit();
+  }
+});
+
+// Main program
 
 new Elysia()
   .onRequest((data) => {
